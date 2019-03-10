@@ -48,12 +48,12 @@ namespace PodcastRss
             var items = GetBlobs(ConfigurationManager.AppSettings["ContainerName"])
                 .Where(x => x.StorageUri.PrimaryUri.ToString().EndsWith("mp3"))
                 .GroupBy(x=>x.Name.Split(new string[] { "- Part" }, StringSplitOptions.RemoveEmptyEntries)[0])
-                .OrderBy(x=>x.Min(y=>y.Properties.LastModified.Value.DateTime))
+                .OrderByDescending(x=>x.Min(y=>y.Properties.LastModified.Value.DateTime))
                 .SelectMany(x=>x.OrderByNatural(y => y.Name))
                 .Select(x => string.Format(ITEM_TEMPLATE.Trim(),
-                    x.Name,
-                    x.Name,
-                    x.Name.Length > 255 ? x.Name.Substring(0, 254) : x.Name,
+                    x.Name.Replace(".mp3",""),
+                    x.Name.Replace(".mp3", ""),
+                    x.Name.Replace(".mp3", "").Length > 255 ? x.Name.Replace(".mp3", "").Substring(0, 254) : x.Name.Replace(".mp3", ""),
                     categoryID,
                     x.StorageUri.PrimaryUri.ToString().Replace(" ", "%20"),
                     "",
